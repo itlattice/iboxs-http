@@ -43,7 +43,7 @@ class CurlUploadFile
         }
         // 拼接文件流
         $data .= "--" . static::$delimiter . $eol
-            . 'Content-Disposition: form-data; name="file"; filename="' . $param['filename'] . '"' . "\r\n"
+            . 'Content-Disposition: form-data; name="file"; filename="' . $param['name'] . '"' . "\r\n"
             . 'Content-Type:application/octet-stream'."\r\n\r\n";
 
         $data .= $upload . "\r\n";

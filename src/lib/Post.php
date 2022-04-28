@@ -94,12 +94,7 @@ trait Post
 
     public function runPostFile($client,$file,$data){
         $mdata = array(
-            'type' => 'image',
-            'filename' => '1.jpg',
-            'filesize' => 58701, //分片上传
-            'offset' => 0,
-            'filetype' => 'image/jpeg',
-            'originName' => '1.jpg',
+            'name' => '1.jpg',
             'file'=>file_get_contents($file)
         );
         $mdata=array_merge($mdata,$data);
