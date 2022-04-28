@@ -46,11 +46,10 @@ trait Post
         curl_setopt($curl, CURLOPT_HEADER, true);
         curl_setopt($curl, CURLOPT_ENCODING, 'gzip,deflate');
         //尝试连接
-        if (curl_exec($curl) === false) {
+        $result = curl_exec($curl);
+        if ($result === false) {
             return array(-1,curl_error($curl),false);
         }
-        //执行命令
-        $result = curl_exec($curl);
         //去空格
         $result = trim($result);
         //转换字符编码
@@ -73,7 +72,7 @@ trait Post
         return array($result,$httpCode,$returnHeader);
     }
 
-    private function getHeader($client) {
+    private function getHeader($client,$file=false) {
         $params=$client->type;
         $header=[];
         if ($params=='params'){
@@ -85,6 +84,26 @@ trait Post
                 'Content-Type: application/json'
             ];
         }
+        if($file){
+            $header=[
+                'Content-Type: multipart/form-data'
+            ];
+        }
         return array_merge($header,$client->header);
+    }
+
+    public function runPostFile($client,$file,$data){
+        $mdata = array(
+            'type' => 'image',
+            'filename' => '1.jpg',
+            'filesize' => 58701, //分片上传
+            'offset' => 0,
+            'filetype' => 'image/jpeg',
+            'originName' => '1.jpg',
+            'file'=>file_get_contents($file)
+        );
+        $mdata=array_merge($mdata,$data);
+        $part = CurlUploadFile::getInstance($client->url)->putFile($mdata);
+        return $part;
     }
 }
